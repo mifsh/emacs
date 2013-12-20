@@ -1,0 +1,31 @@
+
+;; ----- smex-history -----
+(
+ goto-line
+ global-linum-mode
+ package-refresh-contents
+ kill-matching-buffers
+ clean-buffer-list
+ list-packages
+ package-list-packages
+)
+
+;; ----- smex-data -----
+(
+ (emacs-version . 3)
+ (package-list-packages . 9)
+ (cider-jack-in . 12)
+ (package-refresh-contents . 3)
+ (package-install . 1)
+ (eval-buffer . 5)
+ (color-theme-sanityinc-solarized-dark . 18)
+ (rainbow-delimiters-mode . 2)
+ (clojure-mode . 2)
+ (global-rainbow-delimiters-mode . 4)
+ (clojure-test-mode . 2)
+ (list-packages . 1)
+ (clean-buffer-list . 1)
+ (kill-matching-buffers . 1)
+ (global-linum-mode . 1)
+ (goto-line . 2)
+)
