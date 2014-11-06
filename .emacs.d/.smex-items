@@ -1,31 +1,54 @@
 
 ;; ----- smex-history -----
 (
- goto-line
- global-linum-mode
- package-refresh-contents
- kill-matching-buffers
- clean-buffer-list
+ longlines-mode
+ eval-region
  list-packages
- package-list-packages
+ toggle-debug-on-error
+ eval-buffer
+ describe-mode
+ package-install
 )
 
 ;; ----- smex-data -----
 (
  (emacs-version . 3)
- (package-list-packages . 9)
- (cider-jack-in . 12)
- (package-refresh-contents . 3)
- (package-install . 1)
- (eval-buffer . 5)
+ (package-list-packages . 16)
+ (cider-jack-in . 17)
+ (package-refresh-contents . 5)
+ (package-install . 8)
+ (eval-buffer . 9)
  (color-theme-sanityinc-solarized-dark . 18)
  (rainbow-delimiters-mode . 2)
  (clojure-mode . 2)
  (global-rainbow-delimiters-mode . 4)
  (clojure-test-mode . 2)
- (list-packages . 1)
+ (list-packages . 4)
  (clean-buffer-list . 1)
  (kill-matching-buffers . 1)
  (global-linum-mode . 1)
- (goto-line . 2)
+ (goto-line . 28)
+ (toggle-truncate-lines . 9)
+ (longlines-mode . 20)
+ (indent-region . 3)
+ (minimap-create . 3)
+ (scala-mode . 1)
+ (delete-region . 1)
+ (replace-regexp . 3)
+ (kill-line . 2)
+ (toggle-word-wrap . 8)
+ (replace-string . 1)
+ (paredit-wrap-round . 1)
+ (comment-set-column . 2)
+ (set-fill-column . 1)
+ (cider . 1)
+ (cider-quit . 3)
+ (column-number-mode . 2)
+ (describe-mode . 4)
+ (auto-fill-mode . 7)
+ (indent-rigidly . 4)
+ (query-replace . 3)
+ (info-display-manual . 1)
+ (toggle-debug-on-error . 3)
+ (eval-region . 2)
 )

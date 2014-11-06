@@ -1,41 +1,26 @@
+; LAYOUT
+; - fix encoding issues
+; - package management
+;   - configuration of repos
+;   - intial installation of packages
+; - configuration and hooks for each installed package
 
-;Try 1 - set the command key as meta
+
+
+; - - - - - -  OS X Keyboard encoding stuff - - - - - - 
+;!!! in Terminal.app: Preferences->Settings->Keyboard->"Use Option as Meta key"
 ;This actually interprets the OS modified characters back into what is expected
 (set-keyboard-coding-system nil)
-;
-;Try 2 - set command key to meta
-;(setq mac-option-key-is-meta nil)
-;(setq mac-command-key-is-meta t)
-;(setq mac-command-modifier 'meta)
-;(setq mac-option-modifier nil)
-;
-;Try 3 - set command key to meta
-;(setq mac-option-modifier 'super)
-;(setq mac-command-modifier 'meta)
-;
-;Try 4 - again, just tring to get a sane meta key ( alt or command )
-;(setq mac-option-modifier 'super)
-;(setq mac-command-modifier 'meta)
-;(setq mac-option-modifier nil)
-;
-;SOLUTION - in Terminal.app: Preferences->Settings->Keyboard->"Use Option as Meta key"
 ;
 ;UTF-8 Encoding as recommended by: http://www.emacswiki.org/emacs/EmacsForMacOS#toc20
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;solarized
-;(load-theme 'solarized-[light|dark] t)
 
-; Path fixes recommended by http://clojure-doc.org/articles/tutorials/emacs.html
-(defun set-exec-path-from-shell-PATH ()
-  (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
 
-(when window-system (set-exec-path-from-shell-PATH))
 
+; - - - - - - PACKAGE MANAGEMENT - - - - - -- -
 ; for ELPA repo managementy stuff as recommended at: http://www.emacswiki.org/emacs/ELPA
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")
@@ -46,31 +31,79 @@
 	     '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
-(unless (package-installed-p 'scala-mode2)
-  (package-refresh-contents) (package-install 'scala-mode2))
-
-(unless (package-installed-p 'sbt-mode)
-  (package-refresh-contents) (package-install 'sbt-mode))
 
 
-(defvar my-packages '(starter-kit
-		       starter-kit-lisp
-		       starter-kit-bindings
-		       starter-kit-eshell
-		       clojure-mode
-		       clojure-test-mode
-		       cider
-                       rainbow-delimiters
-                       color-theme-solarized))
+; MOVING THE FOLLOWING INTO my-packages PROCEDURE BELOW
+;; (unless (package-installed-p 'scala-mode2)
+;;   (package-refresh-contents) (package-install 'scala-mode2))
+
+;; (unless (package-installed-p 'sbt-mode)
+;;   (package-refresh-contents) (package-install 'sbt-mode))
+
+
+(defvar my-packages 
+  '(starter-kit
+    starter-kit-lisp
+    starter-kit-bindings
+    starter-kit-eshell
+    clojure-mode
+    clojure-test-mode
+    cider
+    rainbow-delimiters
+    color-theme-solarized
+    haskell-mode
+    scala-mode2
+    sbt-mode)
+  "A list of packages that I wish to have installed at launch")
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 
+
+
+
+
+
+
+; - - - - - -  POST INSTALLATION CONFIGURATION OF PACKAGES - - - - - 
+
+
+
+; - - - - - - CLOJURE & CIDER - - - - -- 
+; Path fixes recommended by http://clojure-doc.org/articles/tutorials/emacs.html
+(defun set-exec-path-from-shell-PATH ()
+  (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(when window-system (set-exec-path-from-shell-PATH))
+
+(add-to-list 'auto-mode-alist '("\\.edn$" . clojure-mode))
+
+(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(setq cider-repl-pop-to-buffer-on-connect t)
+(setq cider-popup-stacktraces t)
+(setq cider-repl-popup-stacktraces t)
+(setq cider-auto-select-error-buffer t)
+(setq cider-repl-history-file "~/.emacs.d/cider-history")
+(setq cider-repl-wrap-history t)
+
+(add-hook 'cider-repl-mode-hook 'subword-mode)
+(add-hook 'cider-repl-mode_hook 'paredit-mode)
+(add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
+
+
+
+; - - - - - - Rainbow-Delimiters - - - - - 
 (require 'rainbow-delimiters)
                                         ;(to enable in all programming-related modes
                                         ; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (global-rainbow-delimiters-mode)
+
+
+
+; - - - - - - Solarized ( color theme ) - - - - -
 ;(require 'color-theme-solarized)
 
 (custom-set-variables
@@ -90,6 +123,9 @@
 ;(load-theme 'color-theme-sanityinc-solarized-dark t)
 (load-theme 'solarized-dark t)
 
+
+
+; - - - - - - - ParEdit - - - - - - 
 ; To enable ParEdit
 (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
 (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
@@ -99,6 +135,10 @@
 (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
 (add-hook 'scheme-mode-hook           #'enable-paredit-mode)
 
+
+
+
+; - - - - - - ElDoc - - - - - - 
 ; elDoc hooks to work with ParEdit
 (require 'eldoc) ; if not already loaded
     (eldoc-add-command
@@ -115,6 +155,10 @@
                                         ; Enable ParEdit in clojure-mode
 (add-hook 'clojure-mode-hook 'paredit-mode)
 
+
+
+
+; - - - - - - CIDER - - - - - - -
                                         ; attempted fix for Cider woes
 (defun cider--library-version ()
   "Get the version in the nrepl library header."
@@ -122,6 +166,10 @@
   ;;  (pkg-info-format-version version))
   "0.3.0-SNAPSHOT")
 
+
+
+
+; - - - - - - - SBT & Scala-Mode2 - - - - - 
 ; Customizations for Scala-mode2 & sbt-mode as per:
                                         ; https://github.com/hvesalai/sbt-mode
 (add-hook 'sbt-mode-hook '(lambda ()
@@ -151,5 +199,24 @@
 
 (global-set-key (kbd "M-'") 'next-error)
 
+
+
+
+; - - - - - - LINE NUMBERS - - - - - - 
 ;; Turn on line numbers
 (global-linum-mode 1)
+
+
+
+
+; - - - - - - MiniMap ( SublimeTex like sidebar ) - - - - - - 
+;; Minimap - 'Sublime Text' like sidebar
+(require 'minimap)
+
+; - - - - - - Haskell - - - - - - - - 
+(load "~/.emacs.d/elpa/haskell-mode-20141104.1247/haskell-mode.el")
+
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+
+;; indentation options are: 'turn-on-haskell-indentation || 'turn-on-haskell-indent || 'turn-on-haskell-simple-indent
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
