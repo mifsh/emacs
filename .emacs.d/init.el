@@ -53,7 +53,8 @@
     color-theme-solarized
     haskell-mode
     scala-mode2
-    sbt-mode)
+    sbt-mode
+    minimap)
   "A list of packages that I wish to have installed at launch")
 
 (dolist (p my-packages)
@@ -68,6 +69,15 @@
 
 ; - - - - - -  POST INSTALLATION CONFIGURATION OF PACKAGES - - - - - 
 
+
+; - - - - - - Rainbow-Delimiters - - - - - 
+(require 'rainbow-delimiters)
+;(to enable in all programming-related modes
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+; to enable in all modes
+ ; ERORR
+ ;Symbol's function definition is void: global-rainbow-delimiters-mode
+;(global-rainbow-delimiters-mode)
 
 
 ; - - - - - - CLOJURE & CIDER - - - - -- 
@@ -94,12 +104,6 @@
 (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
 
 
-
-; - - - - - - Rainbow-Delimiters - - - - - 
-(require 'rainbow-delimiters)
-                                        ;(to enable in all programming-related modes
-                                        ; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(global-rainbow-delimiters-mode)
 
 
 
@@ -213,8 +217,12 @@
 ;; Minimap - 'Sublime Text' like sidebar
 (require 'minimap)
 
-; - - - - - - Haskell - - - - - - - - 
-(load "~/.emacs.d/elpa/haskell-mode-20141104.1247/haskell-mode.el")
+ ; - - - - - - Haskell - - - - - - - -
+ ; This needed to be altered manually
+; TODO: figure out how to discover this config file in a more
+; 'generic' way
+;(load "~/.emacs.d/elpa/haskell-mode-20141104.1247/haskell-mode.el")
+(load "~/.emacs.d/elpa/haskell-mode-20141119.1110/haskell-mode.el")
 
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 
